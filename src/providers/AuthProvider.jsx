@@ -13,11 +13,13 @@ import {
 } from 'firebase/auth'
 import { app } from '../firebase/firebase.config'
 
+
 export const AuthContext = createContext(null)
 const auth = getAuth(app)
 const googleProvider = new GoogleAuthProvider()
 
 const AuthProvider = ({ children }) => {
+  
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -41,8 +43,9 @@ const AuthProvider = ({ children }) => {
     return sendPasswordResetEmail(auth, email)
   }
 
-  const logOut = () => {
+  const logOut = async () => {
     setLoading(true)
+    // await clearCookie()
     return signOut(auth)
   }
 
@@ -82,4 +85,4 @@ const AuthProvider = ({ children }) => {
   )
 }
 
-export default AuthProvider
+export default AuthProvider;
