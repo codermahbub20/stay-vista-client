@@ -1,8 +1,10 @@
-import { Link, useNavigate } from 'react-router-dom'
+/* eslint-disable no-undef */
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { FcGoogle } from 'react-icons/fc'
 import { getToken, saveUser } from '../../components/api/auth'
 import toast from 'react-hot-toast'
 import useAuth from '../../hooks/useAuth'
+import { TbFidgetSpinner } from 'react-icons/tb'
 
 const Login = () => {
 
@@ -10,7 +12,8 @@ const Login = () => {
   const { signIn, signInWithGoogle,  loading } = useAuth()
 
   const navigate = useNavigate()
-
+  const location = useLocation()
+    const from = location?.state?.from?.pathname;
   const handleLogIn = async e => {
 
     e.preventDefault();
@@ -28,8 +31,8 @@ const Login = () => {
 
       //  token related
       await getToken(result?.user?.email)
-      navigate('/')
-      toast.success('SignUp Successful')
+      navigate(from || '/',{replace : true})
+      toast.success('Login Successful')
 
 
     } catch (err) {
@@ -51,8 +54,8 @@ const Login = () => {
 
       //  token related
       await getToken(result?.user?.email)
-      navigate('/')
-      toast.success('SignUp Successful')
+      navigate(from || '/' , {replace : true})
+      toast.success('Login Successful')
 
 
     } catch (err) {
@@ -114,7 +117,9 @@ const Login = () => {
               type='submit'
               className='bg-rose-500 w-full rounded-md py-3 text-white'
             >
-              Continue
+              {
+                loading ? <TbFidgetSpinner className='animate-spin mx-auto'></TbFidgetSpinner> :' Continue'
+              }
             </button>
           </div>
         </form>

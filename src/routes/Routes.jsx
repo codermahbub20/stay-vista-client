@@ -5,6 +5,10 @@ import ErrorPage from '../pages/ErrorPage'
 import Login from '../pages/Login/Login'
 import SignUp from '../pages/SignUp/SignUp'
 import RoomDetails from '../pages/RoomsDetails/RoomDetails'
+import PrivateRoute from './PrivateRoute'
+import DashboardLayout from '../layouts/DashboardLayout'
+import AddRoom from '../pages/Dashboard/Host/AddRoom'
+import MYListings from '../pages/Dashboard/Host/MYListings'
 
 export const router = createBrowserRouter([
   {
@@ -18,10 +22,25 @@ export const router = createBrowserRouter([
       },
       {
         path: '/room/:id',
-        element: <RoomDetails></RoomDetails>
+        element: <PrivateRoute><RoomDetails></RoomDetails></PrivateRoute>,
+        
       }
     ],
   },
   { path: '/login', element: <Login /> },
   { path: '/signup', element: <SignUp /> },
+  {
+    path: "/dashboard",
+    element: <DashboardLayout></DashboardLayout>,
+    children: [
+      {
+        path: "add-room",
+        element: <AddRoom></AddRoom>
+      },
+      {
+        path: "my-listings",
+        element: <MYListings></MYListings>
+      }
+    ]
+  }
 ])

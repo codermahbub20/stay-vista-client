@@ -3,7 +3,7 @@
 import { formatDistance } from "date-fns";
 import Button from "../../components/Button/Button";
 import DatePicker from "./Calendar";
-// import { useState } from "react";
+import { useState } from "react";
 
 
 // eslint-disable-next-line react/prop-types
@@ -14,11 +14,11 @@ const RoomReservation = ({ room }) => {
 
     const totalPrice = totalDays * room.price;
 
-    // const [value, setValue] = useState({
-    //     startDate: new Date(room?.from),
-    //     endDate: new Date(room?.to),
-    //     key: 'selection',
-    // })
+    const [value, setValue] = useState({
+        startDate: new Date(room?.from),
+        endDate: new Date(room?.to),
+        key: 'selection',
+    })
 
     return (
         <div className="rounded-xl border-[1px] border-neutral-200 overflow-hidden bg-white">
@@ -29,7 +29,7 @@ const RoomReservation = ({ room }) => {
             </div>
             <hr />
             <div className="flex justify-center">
-                <DatePicker></DatePicker>
+                <DatePicker value={value}></DatePicker>
             </div>
             <hr />
 
