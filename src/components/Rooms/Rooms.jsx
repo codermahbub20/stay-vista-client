@@ -16,7 +16,7 @@ const Rooms = () => {
 
     useEffect(() => {
         setLoading(true)
-        fetch('rooms.json')
+        fetch('http://localhost:5000/rooms')
             .then(res => res.json())
             .then(data => {
                 if (category) {
