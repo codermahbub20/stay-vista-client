@@ -9,6 +9,9 @@ import PrivateRoute from './PrivateRoute'
 import DashboardLayout from '../layouts/DashboardLayout'
 import AddRoom from '../pages/Dashboard/Host/AddRoom'
 import MYListings from '../pages/Dashboard/Host/MYListings'
+import HostRoute from './HostRoute'
+import AdminRoute from './AdminRoute'
+import ManageUsers from '../components/Dashboard/ManageUsers/ManageUsers'
 
 export const router = createBrowserRouter([
   {
@@ -37,14 +40,26 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "add-room",
-        element: <PrivateRoute>
-          <AddRoom></AddRoom>
-        </PrivateRoute>
+        element: 
+          <HostRoute>
+            <AddRoom></AddRoom>
+          </HostRoute>
+        
       },
       {
         path: "my-listings",
         element: <PrivateRoute>
-          <MYListings></MYListings>
+          <HostRoute>
+            <MYListings></MYListings>
+          </HostRoute>
+        </PrivateRoute>
+      },
+      {
+        path: "manage-users",
+        element: <PrivateRoute>
+          <AdminRoute>
+            <ManageUsers/>
+          </AdminRoute>
         </PrivateRoute>
       }
     ]

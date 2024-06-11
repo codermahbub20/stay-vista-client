@@ -67,7 +67,7 @@ const Sidebar = () => {
           {/* Nav Items */}
           <div className='flex flex-col justify-between flex-1 mt-6'>
             {/* If a user is host */}
-            <ToggleBtn toggleHandler={toggleHandler} />
+            {role === 'host' && <ToggleBtn toggleHandler={toggleHandler} />}
             <nav>
               <MenuItem
                 icon={BsGraphUp}
@@ -76,7 +76,7 @@ const Sidebar = () => {
               />
 
               {/*Host Menu Items */}
-              {role === 'host' && <HostMenu></HostMenu>}
+              {role === 'host' ? toggle ?  <HostMenu/> : <GuestMenu/> : ""}
 
               {/*Guest Menu Items */}
               {role === 'guest' && <GuestMenu />}
