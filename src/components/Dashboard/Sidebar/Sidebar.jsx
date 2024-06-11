@@ -7,15 +7,22 @@ import MenuItem from './MenuItem'
 import { GrLogout } from 'react-icons/gr'
 import { FcSettings } from 'react-icons/fc'
 import { AiOutlineBars } from 'react-icons/ai'
-import { BsGraphUp, BsHouseAddFill } from 'react-icons/bs'
+import { BsGraphUp } from 'react-icons/bs'
 import ToggleBtn from './ToggleBtn'
-import { MdHomeWork } from 'react-icons/md'
+
 import useAuth from '../../../hooks/useAuth'
+import useRole from '../../../hooks/useRole'
+import HostMenu from './HostMenu'
+import GuestMenu from './GuestMenu'
+import AdminMenu from './AdminMenu'
 
 
 const Sidebar = () => {
 
-  const {logOut} = useAuth();
+  const { logOut } = useAuth();
+
+  const [role] = useRole();
+  console.log(role);
 
   const [toggle, setToggle] = useState(false)
   const [isActive, setActive] = useState(false)
@@ -47,9 +54,8 @@ const Sidebar = () => {
       </div>
       {/* Sidebar */}
       <div
-        className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-gray-100 w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${
-          isActive && '-translate-x-full'
-        }  md:translate-x-0  transition duration-200 ease-in-out`}
+        className={`z-10 md:fixed flex flex-col justify-between overflow-x-hidden bg-gray-100 w-64 space-y-6 px-2 py-4 absolute inset-y-0 left-0 transform ${isActive && '-translate-x-full'
+          }  md:translate-x-0  transition duration-200 ease-in-out`}
       >
         <div>
           <div>
@@ -69,19 +75,16 @@ const Sidebar = () => {
                 address='/dashboard'
               />
 
-              <MenuItem
-                icon={BsHouseAddFill}
-                label='Add Room'
-                address='add-room'
-              />
+              {/*Host Menu Items */}
+              {role === 'host' && <HostMenu></HostMenu>}
 
-              <MenuItem
-                icon={MdHomeWork}
-                label='My Listings'
-                address='my-listings'
-              />
+              {/*Guest Menu Items */}
+              {role === 'guest' && <GuestMenu />}
 
-              {/* Menu Items */}
+              {/*Admin Menu Items */}
+              {role === 'admin' && <AdminMenu />}
+
+
             </nav>
           </div>
         </div>
