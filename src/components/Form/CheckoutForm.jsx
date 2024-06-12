@@ -1,10 +1,14 @@
 /* eslint-disable react/prop-types */
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './CheckoutForm.css'
 
 import { ImSpinner9 } from 'react-icons/im'
+
+import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 import useAuth from '../../hooks/useAuth'
+import { createPaymentIntent, saveBookingInfo, updateStatus } from '../api/bookings'
 
 const CheckoutForm = ({ bookingInfo, closeModal }) => {
   const stripe = useStripe()
@@ -13,8 +17,16 @@ const CheckoutForm = ({ bookingInfo, closeModal }) => {
   const [cardError, setCardError] = useState('')
   const [clientSecret, setClientSecret] = useState('')
   const [processing, setProcessing] = useState(false)
-
-  // Create Payment Intent
+  const navigate = useNavigate()
+  useEffect(() => {
+    // create payment intent
+    if (bookingInfo.price > 0) {
+      createPaymentIntent({ price: bookingInfo.price }).then(data => {
+        console.log(data.clientSecret)
+        setClientSecret(data.clientSecret)
+      })
+    }
+  }, [bookingInfo])
 
   const handleSubmit = async event => {
     event.preventDefault()
@@ -28,6 +40,7 @@ const CheckoutForm = ({ bookingInfo, closeModal }) => {
       return
     }
 
+    // Card data lookup (Asynchronous Network Call )
     const { paymentMethod, error } = await stripe.createPaymentMethod({
       type: 'card',
       card,
@@ -43,6 +56,7 @@ const CheckoutForm = ({ bookingInfo, closeModal }) => {
 
     setProcessing(true)
 
+    // Ekhane taka katbe
     const { paymentIntent, error: confirmError } =
       await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
@@ -62,12 +76,25 @@ const CheckoutForm = ({ bookingInfo, closeModal }) => {
     console.log('payment intent', paymentIntent)
 
     if (paymentIntent.status === 'succeeded') {
-      // save payment information to the server
-      // Update room status in db
       const paymentInfo = {
         ...bookingInfo,
         transactionId: paymentIntent.id,
         date: new Date(),
+      }
+      try {
+        // save payment information to the server
+        await saveBookingInfo(paymentInfo)
+
+        // Update room status in db
+        await updateStatus(bookingInfo.roomId, true)
+        const text = `Booking Successful! ${paymentIntent.id}`
+        toast.success(text)
+        navigate('/dashboard/my-bookings')
+      } catch (err) {
+        console.log(err)
+        toast.error(err.message)
+      } finally {
+        setProcessing(false)
       }
 
       setProcessing(false)

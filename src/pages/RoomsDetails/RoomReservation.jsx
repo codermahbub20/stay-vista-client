@@ -22,7 +22,7 @@ const RoomReservation = ({ room }) => {
     console.log(totalDays)
 
     const totalPrice = totalDays * room.price;
-    
+
     const [value, setValue] = useState({
         startDate: new Date(room?.from),
         endDate: new Date(room?.to),
@@ -64,7 +64,7 @@ const RoomReservation = ({ room }) => {
             <hr />
 
             <div className="p-4">
-                <Button onClick={() => setIsOpen(true)} label='Reserve'></Button>
+                <Button disabled={room?.host?.email === user?.email || room?.booked } onClick={() => setIsOpen(true)} label='Reserve'></Button>
             </div>
 
             <hr />
